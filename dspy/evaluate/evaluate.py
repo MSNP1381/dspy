@@ -10,6 +10,7 @@ import tqdm
 from tqdm.contrib.logging import logging_redirect_tqdm
 
 import dspy
+from pydantic import BaseModel
 
 try:
     from IPython.display import HTML
@@ -271,7 +272,11 @@ class Evaluate:
         return round(100 * ncorrect / ntotal, 2)
 
 
-def merge_dicts(d1, d2) -> dict:
+def merge_example_pred(d1, d2) -> dict:
+    if isinstance(d1, BaseModel):
+        d1=d1.model_dump()
+    if isinstance(d2, BaseModel):
+        d2=d2.model_dump()
     merged = {}
     for k, v in d1.items():
         if k in d2:
